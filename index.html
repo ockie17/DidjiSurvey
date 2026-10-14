@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Didji by Unpad — Survei Mahasiswa UNPAD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#9b4dea;--p2:#7b2fd0;--bg:#faf8ff;--card:#fff;--tx:#1a1325;--mu:#6d6480;--bd:#e4dcf2;--soft:#f1e8fd;--ink:#111;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--p:#b678f5;--p2:#9b4dea;--bg:#0f0b16;--card:#181222;--tx:#f3eefb;--mu:#a99dbf;--bd:#2f2542;--soft:#271b3a;--ink:#fff}}
+:root[data-theme=dark]{--p:#b678f5;--p2:#9b4dea;--bg:#0f0b16;--card:#181222;--tx:#f3eefb;--mu:#a99dbf;--bd:#2f2542;--soft:#271b3a;--ink:#fff}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 Sora,system-ui,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+.logo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.logo b{font-weight:800;font-size:30px;letter-spacing:.12em;color:var(--p)}.logo i{font-style:normal;font-size:13px;font-weight:600}.logo u{text-decoration:none;font-weight:800;font-size:20px;color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;margin-top:18px}
+h1{font-size:26px;line-height:1.25;margin:0 0 8px}h2{font-size:18px;margin:0 0 4px;color:var(--p)}.mu{color:var(--mu);font-size:14px}
+.tag{display:inline-block;background:var(--soft);color:var(--p);border-radius:99px;padding:3px 12px;font-size:12px;font-weight:600}
+.pick{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--bd);border-radius:16px;padding:18px;margin-top:12px;color:var(--tx);font:inherit;cursor:pointer}
+.pick:hover{border-color:var(--p)}.pick b{display:block;font-size:17px}
+.btn{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:0;border-radius:12px;padding:12px 24px;font:600 15px Sora,sans-serif;cursor:pointer}
+.btn.g{background:var(--soft);color:var(--p)}.btn:disabled{opacity:.5}
+.bar{height:6px;background:var(--soft);border-radius:9px;margin-top:16px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,var(--p),var(--p2));transition:width .3s}
+.q{margin-top:26px}.q>p{font-weight:600;margin:0 0 4px}.q.err>p{color:#d93a5b}.hint{font-size:12.5px;color:var(--mu);margin:0 0 8px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--bd);border-radius:12px;margin-top:8px;cursor:pointer;font-size:14.5px}
+.opt:has(input:checked){border-color:var(--p);background:var(--soft)}.opt.off{opacity:.45}.opt input{accent-color:var(--p);margin-top:4px}
+select,textarea,input[type=text]{width:100%;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);border-radius:12px;padding:11px;font:inherit}
+.oth{margin-top:6px}.lin{display:flex;gap:8px;flex-wrap:wrap}.lin label{flex:1;min-width:48px;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:10px 0;cursor:pointer;font-weight:600}
+.lin label:has(input:checked){background:var(--p);color:#fff;border-color:var(--p)}.lin input{display:none}.ends{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-top:6px}
+.nav{display:flex;justify-content:space-between;margin-top:30px;gap:10px}.ft{text-align:center;margin-top:30px}
+</style></head><body><div class="wrap" id="app"></div>
+<script>
+const FK=["Kedokteran","Hukum","Ekonomi dan Bisnis","Ilmu Sosial dan Ilmu Politik","Ilmu Budaya","Pertanian","Matematika dan Ilmu Pengetahuan Alam","Peternakan","Kedokteran Gigi","Ilmu Komunikasi","Keperawatan","Psikologi","Perikanan dan Ilmu Kelautan","Teknik Geologi","Farmasi","Kesehatan Masyarakat","Teknologi Industri Pertanian","Vokasi","Sekolah Pascasarjana"];
+const SEM=["Semester 1–2","Semester 3–4","Semester 5–6","Semester 7–8","Semester 9 atau lebih"];
+const BUD=["Gratis","Di bawah Rp100.000","Rp100.000–Rp249.000","Rp250.000–Rp499.000","Rp500.000–Rp999.000","Rp1.000.000 atau lebih, jika manfaatnya sepadan","Belum dapat menentukan"];
+const DUR=["2–4 jam","1 hari","2–3 hari","1–2 minggu","3–4 minggu","1–3 bulan dengan jadwal fleksibel"];
+const Z=s=>s.split("|"),O="Lainnya*";
+const S={
+a:{t:"Survei Kebutuhan Pengembangan Kompetensi",tag:"Discover Your Skills. Build Your Future.",d:"Dunia kerja terus berubah. Survei ini membantu Didji by UNPAD memahami kebutuhan, minat, dan aspirasi mahasiswa UNPAD untuk merancang course yang relevan, praktis, dan bermanfaat. Tidak ada jawaban benar atau salah. Waktu pengisian ±5–7 menit.",
+sec:[{n:"Profil Responden",q:[
+{k:1,t:"d",q:"Fakultas Anda saat ini",o:FK},
+{k:2,t:"s",q:"Program pendidikan Anda",o:Z("Sarjana (S1)|Sarjana Terapan (D4)|Diploma (D3)|Magister (S2)|Doktor (S3)|Profesi atau Spesialis").concat(O)},
+{k:3,t:"s",q:"Saat ini Anda berada di semester berapa?",o:SEM},
+{k:4,t:"s",q:"Apa fokus utama Anda saat ini?",o:Z("Fokus pada akademik dan perkuliahan|Mempersiapkan magang atau pengalaman kerja|Mempersiapkan karier setelah lulus|Membangun bisnis atau usaha sendiri|Mengembangkan portofolio dan personal branding|Mengembangkan kompetensi untuk organisasi atau komunitas|Melanjutkan studi atau mempersiapkan beasiswa").concat(O)}]},
+{n:"Kebutuhan Pengembangan Diri",q:[
+{k:5,t:"c",m:3,q:"Kemampuan apa yang paling perlu Anda tingkatkan saat ini?",o:Z("Artificial Intelligence (AI) dan AI Productivity|Data Analysis dan Data Visualization|Microsoft Excel dan pengolahan data|Digital Marketing dan Social Media Strategy|Content Creation, Graphic Design, dan Video Editing|Public Speaking dan Presentation Skills|Communication, Negotiation, dan Interpersonal Skills|Critical Thinking dan Problem Solving|Project Management dan Teamwork|Leadership dan Personal Effectiveness|Coding, Programming, dan Web Development|Cybersecurity dan Digital Safety|Entrepreneurship dan Business Development|Financial Literacy dan Personal Finance|Research Skills dan Academic Writing|Bahasa Inggris dan komunikasi profesional|Career Preparation, CV, LinkedIn, dan Interview Skills|Sustainability, ESG, dan Green Skills").concat(O)},
+{k:6,t:"c",m:3,q:"Apa tantangan terbesar dalam mengembangkan kemampuan tersebut?",o:Z("Belum tahu kemampuan apa yang paling dibutuhkan untuk masa depan|Belum menemukan course yang sesuai dengan kebutuhan|Sudah belajar teori, tetapi belum percaya diri untuk praktik|Belum mampu menggunakan tools digital secara optimal|Kesulitan membangun portofolio atau hasil karya|Kurang memiliki mentor atau arahan belajar|Jadwal kuliah membuat waktu belajar terbatas|Biaya kursus atau sertifikasi menjadi kendala|Kesulitan menemukan pengalaman atau proyek nyata|Belum mengetahui bagaimana kemampuan tersebut diterapkan dalam dunia kerja").concat(O)},
+{k:7,t:"l",q:"Seberapa percaya diri Anda bahwa kemampuan Anda saat ini cukup untuk menghadapi dunia kerja atau membangun usaha?",e:["Sangat tidak percaya diri","Sangat percaya diri"]},
+{k:8,t:"p",q:"Jika dapat meningkatkan satu kemampuan dalam tiga bulan ke depan, kemampuan apa yang akan Anda pilih dan mengapa?"}]},
+{n:"Minat Course Program",q:[
+{k:9,t:"c",m:3,q:"Pilih maksimal 3 bidang course yang paling ingin Anda ikuti melalui Didji by UNPAD",o:Z("AI for Students: AI untuk belajar, riset, produktivitas, dan pemecahan masalah|Data Analytics: Excel, visualisasi, dashboard, keputusan berbasis data|Digital Marketing: strategi pemasaran digital, social media, content planning|Creative Digital Skills: desain grafis, presentasi visual, video editing|Digital Productivity: Microsoft 365, Google Workspace, kolaborasi, otomasi|Coding & Digital Innovation: programming dan web development|Communication & Personal Branding: public speaking, storytelling, profil profesional|Career Readiness: CV, LinkedIn, interview, portofolio|Project Management & Leadership: mengelola proyek, tim, dan inisiatif|Entrepreneurship & Business Skills: validasi ide, business model, pemasaran|Research & Academic Skills: metodologi, academic writing, pengolahan data|Financial & Sustainability Skills: literasi keuangan, ESG, keberlanjutan").concat(O)},
+{k:10,t:"d",q:"Dari bidang yang Anda pilih, course mana yang menjadi prioritas nomor satu?",src:[9]},
+{k:11,t:"c",m:3,q:"Hasil nyata apa yang paling ingin Anda dapatkan setelah menyelesaikan course tersebut?",o:Z("Mampu menggunakan tools atau teknologi tertentu|Mampu menyelesaikan tugas lebih cepat dan efektif|Menghasilkan proyek atau portofolio yang bisa ditunjukkan|Mendapatkan sertifikat kompetensi|Meningkatkan peluang magang dan mendapatkan pekerjaan|Membangun bisnis atau menghasilkan pendapatan|Meningkatkan prestasi akademik dan kualitas penelitian|Meningkatkan kepercayaan diri dan kemampuan komunikasi|Memperoleh koneksi profesional dan komunitas belajar|Mempersiapkan diri untuk sertifikasi profesional").concat(O)},
+{k:12,t:"s",q:"Metode pembelajaran seperti apa yang paling Anda sukai?",o:Z("Hands-on workshop: belajar langsung melalui praktik|Project-based learning: menyelesaikan proyek nyata|Bootcamp intensif dengan target kompetensi tertentu|Kelas online yang fleksibel|Kelas tatap muka bersama instruktur|Blended learning: online dan tatap muka|Microlearning: materi singkat bertahap|Mentoring atau coaching bersama praktisi")},
+{k:13,t:"s",q:"Durasi course yang paling sesuai dengan jadwal Anda?",o:DUR},
+{k:14,t:"s",q:"Sertifikat seperti apa yang paling bernilai bagi Anda?",o:Z("Sertifikat penyelesaian course|Sertifikat yang disertai asesmen kompetensi|Sertifikasi profesional dari lembaga yang relevan|Sertifikat berbasis proyek atau portofolio|Tidak terlalu mempertimbangkan sertifikat; saya lebih mengutamakan keterampilan praktis")}]},
+{n:"Kesiapan Mengikuti Program",q:[
+{k:15,t:"s",q:"Anggaran yang bersedia Anda alokasikan untuk satu course?",h:"Untuk riset kesediaan membayar, bukan harga program yang sudah ditetapkan.",o:["Saya mencari program gratis"].concat(BUD.slice(1))},
+{k:16,t:"c",m:3,q:"Apa yang paling memengaruhi keputusan Anda mengikuti sebuah course?",o:Z("Harga terjangkau atau tersedia beasiswa|Materi relevan dengan kebutuhan karier|Instruktur merupakan praktisi berpengalaman|Sertifikat yang memiliki nilai profesional|Banyak praktik dan proyek nyata|Jadwal fleksibel dan tidak mengganggu kuliah|Diselenggarakan atau didukung oleh UNPAD|Ada kesempatan magang, proyek, atau networking|Ada komunitas dan pendampingan setelah kelas|Memiliki hasil belajar yang jelas dan terukur")},
+{k:17,t:"l",q:"Jika Didji by UNPAD membuka course sesuai minat utama Anda, seberapa besar kemungkinan Anda mendaftar dalam enam bulan ke depan?",e:["Sangat tidak mungkin","Sangat mungkin"]},
+{k:18,t:"p",opt:1,q:"Saran atau kebutuhan course lain yang penting untuk mahasiswa UNPAD (opsional)"}]}]},
+b:{t:"Digital Skills Needs Survey",tag:"Build Your Digital Skills. Create Your Future.",d:"Survei kebutuhan program keterampilan digital berbasis Microsoft 365, Google Workspace, dan Adobe Creative Cloud untuk akademik, organisasi, portofolio, magang, dan karier Anda. Tidak ada jawaban benar atau salah. Waktu pengisian ±5–7 menit.",
+sec:[{n:"Profil Mahasiswa",q:[
+{k:1,t:"d",q:"Anda berasal dari fakultas mana?",o:FK},
+{k:2,t:"s",q:"Anda saat ini berada di semester berapa?",o:SEM},
+{k:3,t:"c",m:3,q:"Aktivitas apa yang paling sering Anda lakukan menggunakan perangkat digital?",o:Z("Mengerjakan tugas kuliah dan laporan|Mengolah data untuk tugas atau penelitian|Membuat presentasi akademik|Mengerjakan tugas kelompok dan berkolaborasi|Mengelola organisasi atau kepanitiaan|Membuat desain poster, infografik, atau publikasi|Membuat konten media sosial|Mengedit foto dan video|Mempersiapkan CV, portofolio, atau kebutuhan magang|Membangun bisnis atau proyek pribadi").concat(O)}]},
+{n:"Kebutuhan dan Kendala Digital",q:[
+{k:4,t:"l",q:"Seberapa percaya diri Anda menggunakan aplikasi produktivitas, kolaborasi, dan kreativitas digital?",e:["Belum percaya diri","Sangat percaya diri"]},
+{k:5,t:"c",m:3,q:"Kendala yang paling sering Anda alami saat mengerjakan tugas atau proyek digital?",o:Z("Kesulitan mengolah data dan menggunakan rumus spreadsheet|Kesulitan membuat presentasi yang profesional|Dokumen kelompok sulit dikelola dan disinkronkan|Kesulitan berkolaborasi secara real-time|File tersebar dan sulit ditemukan|Waktu terlalu lama untuk pekerjaan berulang|Kesulitan membuat desain visual yang menarik|Belum mampu mengedit video atau membuat konten berkualitas|Belum memahami fitur lanjutan aplikasi|Belum tahu tools yang paling sesuai|Tidak memiliki akses atau lisensi aplikasi|Tidak mengalami kendala berarti").concat(O)},
+{k:6,t:"c",m:3,q:"Hasil yang paling ingin Anda capai melalui pelatihan keterampilan digital?",o:Z("Menyelesaikan tugas kuliah lebih cepat|Meningkatkan kualitas laporan dan penelitian|Membuat presentasi yang lebih profesional|Meningkatkan kemampuan analisis data|Bekerja lebih efektif dalam tim|Menghasilkan desain dan konten digital berkualitas|Membangun portofolio untuk magang atau pekerjaan|Meningkatkan produktivitas organisasi atau kepanitiaan|Mengembangkan bisnis atau proyek kreatif|Meningkatkan kesiapan menghadapi dunia kerja")}]},
+{n:"Microsoft 365 / Office 365",q:[
+{k:7,t:"c",m:3,q:"Course Microsoft 365 mana yang paling ingin Anda ikuti?",o:Z("Excel for Academic & Career|Advanced Excel & Data Analysis|PowerPoint Presentation Mastery|Microsoft Word for Professional Documents|Microsoft Teams & OneDrive|Microsoft Forms & Power Automate|Power BI for Beginners|AI Productivity with Microsoft 365 Copilot|Belum membutuhkan course Microsoft 365").concat(O)},
+{k:8,t:"s",q:"Jika mengikuti course Microsoft 365, hasil apa yang paling ingin Anda kuasai?",o:Z("Mengolah dan menganalisis data secara mandiri|Membuat laporan dan dokumen profesional|Membuat presentasi yang lebih meyakinkan|Mengelola tugas dan kolaborasi kelompok|Mengotomasi pekerjaan yang berulang|Membuat dashboard untuk menyajikan data|Menggunakan AI secara produktif dan bertanggung jawab")}]},
+{n:"Google Workspace",q:[
+{k:9,t:"c",m:3,q:"Course Google Workspace mana yang paling ingin Anda ikuti?",o:Z("Google Docs for Academic Productivity|Google Sheets for Data Analysis|Google Slides for Effective Presentations|Google Drive & Cloud Collaboration|Google Forms for Survey & Research|Google Workspace for Team Projects|Workflow Automation with Google Workspace|AI Productivity with Gemini|Belum membutuhkan course Google Workspace").concat(O)},
+{k:10,t:"c",m:3,q:"Dalam aktivitas apa Anda paling ingin memanfaatkan Google Workspace?",o:Z("Tugas kelompok lintas kelas atau fakultas|Penelitian, survei, dan pengumpulan data|Pengelolaan organisasi atau kepanitiaan|Penyusunan laporan dan presentasi|Penyimpanan serta berbagi dokumen|Koordinasi proyek dan kegiatan|Pekerjaan magang atau kebutuhan profesional|Belum memiliki kebutuhan khusus")}]},
+{n:"Adobe Creative Cloud",q:[
+{k:11,t:"c",m:3,q:"Course Adobe Creative Cloud mana yang paling ingin Anda ikuti?",o:Z("Adobe Photoshop|Adobe Illustrator|Adobe InDesign|Adobe Premiere Pro|Adobe After Effects|Adobe Lightroom|Adobe Creative Workflow|Visual Storytelling & Content Creation|Belum membutuhkan course Adobe Creative Cloud").concat(O)},
+{k:12,t:"c",m:3,q:"Untuk kebutuhan apa Anda ingin mengembangkan keterampilan kreatif digital?",o:Z("Membuat poster dan publikasi kegiatan|Membuat presentasi visual yang menarik|Membuat konten media sosial|Mengembangkan personal branding|Membuat video edukasi atau promosi|Membangun portofolio desain atau multimedia|Mendukung tugas akademik dan penelitian|Mendukung bisnis atau usaha kreatif|Mempersiapkan karier di bidang kreatif dan komunikasi")}]},
+{n:"Prioritas dan Preferensi Belajar",q:[
+{k:13,t:"s",q:"Jika hanya boleh memilih satu ekosistem untuk dipelajari terlebih dahulu, mana yang paling Anda butuhkan?",o:Z("Microsoft 365 / Office 365|Google Workspace|Adobe Creative Cloud|Saya membutuhkan kombinasi dua atau lebih ekosistem|Saya belum yakin")},
+{k:14,t:"d",q:"Pilih satu course yang paling ingin Anda ikuti dalam tiga bulan ke depan",src:[7,9,11]},
+{k:15,t:"s",q:"Format pembelajaran yang paling Anda sukai?",o:Z("Workshop praktik langsung|Belajar melalui proyek nyata|Bootcamp intensif|Kelas online langsung bersama instruktur|Kelas online mandiri yang fleksibel|Blended learning: online dan tatap muka|Microlearning: materi singkat dan bertahap")},
+{k:16,t:"s",q:"Durasi course yang paling sesuai dengan jadwal kuliah Anda?",o:DUR},
+{k:17,t:"c",m:3,q:"Apa yang paling Anda pertimbangkan sebelum mendaftar course digital skills?",o:Z("Harga terjangkau atau tersedia beasiswa|Materi sesuai kebutuhan akademik dan karier|Banyak praktik langsung|Instruktur berpengalaman|Memperoleh sertifikat|Menghasilkan proyek atau portofolio|Jadwal tidak mengganggu kuliah|Akses ke software atau lisensi pembelajaran|Ada pendampingan setelah course|Diselenggarakan atau didukung oleh UNPAD")},
+{k:18,t:"s",q:"Anggaran yang bersedia Anda alokasikan untuk satu course?",o:BUD},
+{k:19,t:"l",q:"Seberapa besar kemungkinan Anda mengikuti course yang sesuai kebutuhan utama Anda dalam tiga bulan ke depan?",e:["Sangat tidak mungkin","Sangat mungkin"]},
+{k:20,t:"p",opt:1,q:"Program atau keterampilan apa yang paling Anda harapkan dari Didji by UNPAD? (opsional)"}]}]}};
+const LOGO='<div class="logo"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="#9b4dea" stroke-width="3.5" stroke-linecap="round"><path d="M12 4H6a2 2 0 0 0-2 2v26a2 2 0 0 0 2 2h6"/><path d="M26 34h6a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-6"/><path d="M14 11v16l13-8z" fill="#9b4dea" stroke="none"/></svg><b>DIDJI</b><i>by</i><u>Unpad</u></div>';
+const $=document.getElementById("app");let sv="x",si=0,A={},ts=0;
+const key=k=>"q"+k;
+function opts(q){if(q.src){let r=[];q.src.forEach(s=>(A[key(s)]||[]).forEach(v=>{if(!/^Belum|^Lainnya/.test(v)&&!r.includes(v))r.push(v)}));return r}return q.o||[]}
+const ot=o=>o.endsWith("*")?o.slice(0,-1):o;
+function home(){si=0;A={};const t=S.x;$.innerHTML=LOGO+`<div class="card"><span class="tag">${t.tag}</span><h1 style="margin-top:10px">${t.t}</h1><p class="mu">${t.d}</p><p class="mu">Jawaban Anda hanya digunakan untuk merancang program Didji by UNPAD.</p><div class="nav" style="justify-content:flex-end"><button class="btn" data-a="start">Mulai Survei</button></div></div><p class="ft mu">Didji by UNPAD — Empowering People, Accelerating Transformation.</p>`}
+function intro(){const s=S[sv];$.innerHTML=LOGO+`<div class="card"><span class="tag">${s.tag}</span><h1 style="margin-top:10px">${s.t}</h1><p class="mu">${s.d}</p><div class="nav"><button class="btn g" data-a="home">Kembali</button><button class="btn" data-a="start">Mulai Survei</button></div></div>`}
+function qh(q){const o=opts(q),v=A[key(q.k)],ot_=A[key(q.k)+"_o"]||"";let b="";
+if(q.t=="d")b=`<select data-k="${q.k}"><option value="">— Pilih —</option>${o.map(x=>`<option ${v==x?"selected":""}>${x}</option>`).join("")}</select>`;
+else if(q.t=="s"||q.t=="c"){const c=q.t=="c",full=c&&(v||[]).length>=q.m;b=o.map(x=>{const on=c?(v||[]).includes(x):v==x;return `<label class="opt ${full&&!on?"off":""}"><input type="${c?"checkbox":"radio"}" name="q${q.k}" data-k="${q.k}" value="${x.replace(/"/g,"&quot;")}" ${on?"checked":""} ${full&&!on?"disabled":""}><span>${ot(x)}</span></label>`}).join("");
+if(o.some(x=>x.endsWith("*"))&&(c?(v||[]).includes("Lainnya*"):v=="Lainnya*"))b+=`<input class="oth" type="text" data-o="${q.k}" placeholder="Tuliskan jawaban Anda" value="${ot_}">`}
+else if(q.t=="l")b=`<div class="lin">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="q${q.k}" data-k="${q.k}" value="${n}" ${v==n?"checked":""}>${n}</label>`).join("")}</div><div class="ends"><span>1 · ${q.e[0]}</span><span>5 · ${q.e[1]}</span></div>`;
+else b=`<textarea rows="4" data-k="${q.k}" placeholder="Jawaban Anda">${v||""}</textarea>`;
+return `<div class="q" id="Q${q.k}"><p>${q.k}. ${q.q}</p>${q.t=="c"?`<div class="hint">Pilih maksimal ${q.m}.</div>`:q.h?`<div class="hint">${q.h}</div>`:""}${b}</div>`}
+function step(){const s=S[sv],n=s.sec.length,sc=s.sec[si];$.innerHTML=LOGO+`<div class="bar"><div style="width:${(si+1)/(n+0)*100}%"></div></div><div class="card" style="margin-top:12px"><span class="tag">Bagian ${String.fromCharCode(65+si)} dari ${n}</span><h2 style="margin-top:8px">${sc.n}</h2>${sc.q.map(qh).join("")}<input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="nav"><button class="btn g" data-a="prev">Kembali</button><button class="btn" data-a="next">${si==n-1?"Kirim Jawaban":"Lanjut"}</button></div></div>`;scrollTo(0,0)}
+function valid(){let bad=null;S[sv].sec[si].q.forEach(q=>{const v=A[key(q.k)],e=document.getElementById("Q"+q.k);let ok=q.opt||(q.t=="c"?(v||[]).length>0:v!==undefined&&v!==""&&v!==null);if(ok&&q.t=="p"&&!q.opt)ok=v.trim()!="";e.classList.toggle("err",!ok);if(!ok&&!bad)bad=e});if(bad)bad.scrollIntoView({behavior:"smooth",block:"center"});return!bad}
+const APPS_SCRIPT_URL="GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT";
+async function send(){if(window._s)return;window._s=1;let ok=false;const hp=document.getElementById("hp"),bot=hp&&hp.value;
+const out={},labels={};S.x.sec.forEach(s=>s.q.forEach(q=>{const id=key(q.k),v=A[id],oth=A[id+"_o"]||"",f=x=>x==="Lainnya*"?"Lainnya"+(oth?": "+oth:""):x;out[id]=v==null?"":Array.isArray(v)?v.map(f).join(" | "):typeof v=="string"?f(v):v;labels[id]=q.k+". "+q.q}));
+const rec={survey:"x",submittedAt:new Date().toISOString(),answers:out,labels};
+if(bot)ok=true;else{
+if(!/^https:\/\/script\.google\.com\//.test(APPS_SCRIPT_URL)){}else try{await fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(rec)});ok=true}catch(e){}
+if(!ok)try{const k="didji_pending",p=JSON.parse(localStorage.getItem(k)||"[]");p.push(rec);localStorage.setItem(k,JSON.stringify(p))}catch(e){}}
+window._s=0;
+$.innerHTML=LOGO+`<div class="card" style="text-align:center"><h1>Terima kasih! 🎉</h1><p class="mu">Masukan Anda membantu Didji by UNPAD merancang pengalaman belajar yang lebih relevan, praktis, dan berorientasi pada masa depan.</p>${ok?"":`<p class="mu">Catatan: jawaban belum terkirim ke server dan disimpan sementara di perangkat ini. Silakan coba lagi nanti.</p>`}<p><b style="color:var(--p)">Your Future. Your Skills. Your Impact.</b></p><button class="btn" data-a="home">Kembali ke Beranda</button></div>`}
+$.addEventListener("click",e=>{const b=e.target.closest("[data-s],[data-a]");if(!b)return;if(b.dataset.s){sv=b.dataset.s;intro()}else{const a=b.dataset.a;if(a=="home")home();else if(a=="start"){si=0;step()}else if(a=="prev"){si?(si--,step()):home()}else if(a=="next"&&valid()){if(si<S[sv].sec.length-1){si++;step()}else send()}}});
+$.addEventListener("input",e=>{const t=e.target;if(t.dataset.o){A[key(t.dataset.o)+"_o"]=t.value;return}if(!t.dataset.k)return;const q=S[sv].sec[si].q.find(x=>x.k==t.dataset.k),id=key(q.k);
+if(t.type=="checkbox"){const c=new Set(A[id]||[]);t.checked?c.add(t.value):c.delete(t.value);A[id]=[...c];const sy=scrollY;step();scrollTo(0,sy)}
+else if(t.type=="radio"){A[id]=q.t=="l"?+t.value:t.value;if(t.value=="Lainnya*"||q.o&&q.o.includes("Lainnya*")){const sy=scrollY;step();scrollTo(0,sy)}}
+else A[id]=t.value});
+const a=S.a.sec.flatMap(x=>x.q),b=S.b.sec.flatMap(x=>x.q);
+const ga=k=>({...a.find(q=>q.k==k),o0:"a"+k}),gb=k=>({...b.find(q=>q.k==k),o0:"b"+k});
+const G=[["Profil Responden",[ga(1),ga(2),ga(3),ga(4),gb(3)]],["Kebutuhan Pengembangan Diri",[ga(5),ga(6),ga(7),ga(8)]],["Minat Bidang Course",[ga(9),ga(10),ga(11)]],["Keterampilan Digital: Microsoft 365, Google Workspace & Adobe",[gb(4),gb(5),gb(6),gb(7),gb(8),gb(9),gb(10),gb(11),gb(12)]],["Prioritas, Preferensi & Kesiapan",[gb(13),gb(14),ga(12),ga(13),ga(14),ga(15),ga(16),ga(17),ga(18)]]];
+const M={};let n=0;G.forEach(g=>g[1].forEach(q=>M[q.o0]=++n));
+G.forEach(g=>g[1].forEach(q=>{if(q.src)q.src=q.src.map(x=>M[q.o0[0]+x]);if(q.o0=="b14")q.q="Pilih satu course digital yang paling ingin Anda ikuti dalam tiga bulan ke depan";if(q.o0=="a16")q.o=[...q.o,"Akses ke software atau lisensi pembelajaran"];if(q.o0=="a18")q.q="Saran atau kebutuhan course dan keterampilan lain yang penting untuk mahasiswa UNPAD (opsional)";q.k=M[q.o0]}));
+S.x={t:"Survei Kebutuhan Kompetensi & Keterampilan Digital Mahasiswa UNPAD",tag:"Discover Your Skills. Build Your Future.",d:"Dunia kerja terus berubah. Survei ini membantu Didji by UNPAD memahami kebutuhan, minat, dan aspirasi mahasiswa UNPAD, termasuk keterampilan digital berbasis Microsoft 365, Google Workspace, dan Adobe Creative Cloud, untuk merancang course yang relevan dan praktis. Tidak ada jawaban benar atau salah. Waktu pengisian ±8–10 menit.",sec:G.map(g=>({n:g[0],q:g[1]}))};
+home();
+</script></body></html>
