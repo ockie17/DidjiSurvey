@@ -29,7 +29,7 @@ select,textarea,input[type=text]{width:100%;background:var(--card);color:var(--t
 .nav{display:flex;justify-content:space-between;margin-top:30px;gap:10px}.ft{text-align:center;margin-top:30px}
 </style></head><body><div class="wrap" id="app"></div>
 <script>
-const FK=["Kedokteran","Hukum","Ekonomi dan Bisnis","Ilmu Sosial dan Ilmu Politik","Ilmu Budaya","Pertanian","Matematika dan Ilmu Pengetahuan Alam","Peternakan","Kedokteran Gigi","Ilmu Komunikasi","Keperawatan","Psikologi","Perikanan dan Ilmu Kelautan","Teknik Geologi","Farmasi","Kesehatan Masyarakat","Teknologi Industri Pertanian","Vokasi","Sekolah Pascasarjana"];
+const FK=["Kedokteran","Hukum","Ekonomi dan Bisnis","Ilmu Sosial dan Ilmu Politik","Ilmu Budaya","Pertanian","Matematika dan Ilmu Pengetahuan Alam","Peternakan","Kedokteran Gigi","Ilmu Komunikasi","Keperawatan","Psikologi","Perikanan dan Ilmu Kelautan","Teknik Geologi","Farmasi","Teknologi Industri Pertanian","Vokasi","Sekolah Pascasarjana"];
 const SEM=["Semester 1–2","Semester 3–4","Semester 5–6","Semester 7–8","Semester 9 atau lebih"];
 const BUD=["Gratis","Di bawah Rp100.000","Rp100.000–Rp249.000","Rp250.000–Rp499.000","Rp500.000–Rp999.000","Rp1.000.000 atau lebih, jika manfaatnya sepadan","Belum dapat menentukan"];
 const DUR=["2–4 jam","1 hari","2–3 hari","1–2 minggu","3–4 minggu","1–3 bulan dengan jadwal fleksibel"];
@@ -38,7 +38,7 @@ const S={
 a:{t:"Survei Kebutuhan Pengembangan Kompetensi",tag:"Discover Your Skills. Build Your Future.",d:"Dunia kerja terus berubah. Survei ini membantu Didji by UNPAD memahami kebutuhan, minat, dan aspirasi mahasiswa UNPAD untuk merancang course yang relevan, praktis, dan bermanfaat. Tidak ada jawaban benar atau salah. Waktu pengisian ±5–7 menit.",
 sec:[{n:"Profil Responden",q:[
 {k:1,t:"d",q:"Fakultas Anda saat ini",o:FK},
-{k:2,t:"s",q:"Program pendidikan Anda",o:Z("Sarjana (S1)|Sarjana Terapan (D4)|Diploma (D3)|Magister (S2)|Doktor (S3)|Profesi atau Spesialis").concat(O)},
+{k:2,t:"s",q:"Program pendidikan Anda",o:Z("Sarjana (S1)|Sarjana Terapan (D4)|Magister (S2)|Doktor (S3)|Profesi atau Spesialis").concat(O)},
 {k:3,t:"s",q:"Saat ini Anda berada di semester berapa?",o:SEM},
 {k:4,t:"s",q:"Apa fokus utama Anda saat ini?",o:Z("Fokus pada akademik dan perkuliahan|Mempersiapkan magang atau pengalaman kerja|Mempersiapkan karier setelah lulus|Membangun bisnis atau usaha sendiri|Mengembangkan portofolio dan personal branding|Mengembangkan kompetensi untuk organisasi atau komunitas|Melanjutkan studi atau mempersiapkan beasiswa").concat(O)}]},
 {n:"Kebutuhan Pengembangan Diri",q:[
@@ -101,7 +101,7 @@ else b=`<textarea rows="4" data-k="${q.k}" placeholder="Jawaban Anda">${v||""}</
 return `<div class="q" id="Q${q.k}"><p>${q.k}. ${q.q}</p>${q.t=="c"?`<div class="hint">Pilih maksimal ${q.m}.</div>`:q.h?`<div class="hint">${q.h}</div>`:""}${b}</div>`}
 function step(){const s=S[sv],n=s.sec.length,sc=s.sec[si];$.innerHTML=LOGO+`<div class="bar"><div style="width:${(si+1)/(n+0)*100}%"></div></div><div class="card" style="margin-top:12px"><span class="tag">Bagian ${String.fromCharCode(65+si)} dari ${n}</span><h2 style="margin-top:8px">${sc.n}</h2>${sc.q.map(qh).join("")}<input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="nav"><button class="btn g" data-a="prev">Kembali</button><button class="btn" data-a="next">${si==n-1?"Kirim Jawaban":"Lanjut"}</button></div></div>`;scrollTo(0,0)}
 function valid(){let bad=null;S[sv].sec[si].q.forEach(q=>{const v=A[key(q.k)],e=document.getElementById("Q"+q.k);let ok=q.opt||(q.t=="c"?(v||[]).length>0:v!==undefined&&v!==""&&v!==null);if(ok&&q.t=="p"&&!q.opt)ok=v.trim()!="";e.classList.toggle("err",!ok);if(!ok&&!bad)bad=e});if(bad)bad.scrollIntoView({behavior:"smooth",block:"center"});return!bad}
-const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbyXwlyYVvcnn4aJ00P-23h0It8Ah-p7cOv5xHJHTjygUwKfHncDEr9lHJ5GYhOmSBguNA/exec";
+const APPS_SCRIPT_URL="GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT";
 async function send(){if(window._s)return;window._s=1;let ok=false;const hp=document.getElementById("hp"),bot=hp&&hp.value;
 const out={},labels={};S.x.sec.forEach(s=>s.q.forEach(q=>{const id=key(q.k),v=A[id],oth=A[id+"_o"]||"",f=x=>x==="Lainnya*"?"Lainnya"+(oth?": "+oth:""):x;out[id]=v==null?"":Array.isArray(v)?v.map(f).join(" | "):typeof v=="string"?f(v):v;labels[id]=q.k+". "+q.q}));
 const rec={survey:"x",submittedAt:new Date().toISOString(),answers:out,labels};
